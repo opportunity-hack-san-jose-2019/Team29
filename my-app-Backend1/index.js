@@ -14,9 +14,9 @@ var ExtractJwt = passportJWT.ExtractJwt;
 var JwtStrategy = passportJWT.Strategy;
 
 //api declarations
-// var Database=require('../Backend/Database');
-var Login=require('./src/api/login');
-var Signup=require('./src/api/signup');
+var Database=require('../my-app-Backend1/Database');
+var login=require('./src/api/login');
+var signup=require('./src/api/signup');
 
 //few constants declarations
 const GlobalVar = require("./GlobalVar");
@@ -24,8 +24,8 @@ const bcrypt = require("./node_modules/bcrypt/bcrypt");
 const saltRounds = 10;
 
 //mongodb model declaration for passport jwt
-// var Customer = require('../Backend/models/Customer');
-// var Restaurant = require('../Backend/models/Restaurant');
+var Mentor = require('./src/models/Mentor');
+var Mentee = require('./src/models/Mentee');
 
 //express delcarations
 app.set("view engine", "ejs");
