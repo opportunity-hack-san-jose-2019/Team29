@@ -1,2 +1,2 @@
-// export const hostedAddress="http://18.208.219.249";
-export const hostedAddress="http://localhost";
+export const hostedAddress="http://10.225.73.79";
+//export const hostedAddress="http://localhost";
