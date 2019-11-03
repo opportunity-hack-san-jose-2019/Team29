@@ -54,12 +54,13 @@ class Preference extends Component {
         axios.post(hostedAddress + ":3001/getMentors", data, {headers:{'Authorization':authorization}})
             .then(response => {
                 console.log("Status Code : ", response);
-                if (response.status === 200 && response.mentorList) {
+                if (response.status === 200 && response.data.mentorList) {
                     this.setState({
                         authFlag: true,
-                        mentorList: response.mentorList
+                        mentorList: response.data.mentorList
                         //mentorList: [{name:'Adam', age:'3'}, {name:'Ben', age:'34'}, {name:'Sean', age:'37'}]
                     });
+                    console.log(this.state.mentorList)
                 } else if (response.status === 201 && response.data != "exists" && response.data != "error") {
                     console.log("new mentee created-");
                     console.log(cookie.load('cookie'));
@@ -133,11 +134,11 @@ class Preference extends Component {
                             <div style={{display: "flex"}}>
                             <div style={{display: "flex", "border-style": "solid", "margin": "30px", "padding": "30px", "width": "300px", "border-radius": "25px", "background-color": "#d5f4e6" }}>
                                 <MentorDisplay item={item} />
-                                <button onClick={() => this.writeRequest(item.email)} className="btn btn-primary" style={{height: "20px", "margin-top": "auto", "margin-bottom": "auto", "margin-left": "50px"}}>
+                                <button onClick={() => this.writeRequest(item[0].email)} className="btn btn-primary" style={{height: "20px", "margin-top": "auto", "margin-bottom": "auto", "margin-left": "50px"}}>
                                     Request
                                 </button>
                             </div>
-                            <div style={{ display: 'none', "margin-top": "auto", "margin-bottom": "auto", "padding-left": "50px" }} id={item.email}>
+                            <div style={{ display: 'none', "margin-top": "auto", "margin-bottom": "auto", "padding-left": "50px" }} id={item[0].email}>
                                 <input
                                     ref={ref => (this.messageToMentor = ref)}
                                     type="text"
