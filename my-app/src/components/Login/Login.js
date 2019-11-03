@@ -8,7 +8,9 @@ import "react-dropdown/style.css";
 import { connect } from 'react-redux';
 import { login } from "../../redux-files/action";
 import { setTimeout } from "timers";
-import {hostedAddress} from "../../GlobalVar"
+
+
+const hostedAddress = "http://localhost";
 
 let redirectVar = null;
 
@@ -19,34 +21,32 @@ class Login extends Component {
   constructor(props) {
     super(props);   
     this.state = {
-      email: "",
+      username: "",
       password: "",
-        authFlag: false,
-      userOptions: ""
+      authFlag: false,
+      role: ""
     };
-    this.emailChangeHandler = this.emailChangeHandler.bind(this);
+    this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
     this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
-    this.userOptionsChangeHandler = this.userOptionsChangeHandler.bind(this);
+    this.roleChangeHandler = this.roleChangeHandler.bind(this);
     this.submitLogin = this.submitLogin.bind(this);
   }
 
-    componentWillMount() {
-        this.setState({
-            authFlag: false
-        });
-    }
-
-  emailChangeHandler = e => {
+  componentWillMount() {
     this.setState({
-        email: e.target.value
+      authFlag: false
+    });
+  }
+  usernameChangeHandler = e => {
+    this.setState({
+      username: e.target.value
     });
   };
-
-  userOptionsChangeHandler = value => {
+  roleChangeHandler = value => {
     this.setState({
-        userOptions: value
+      role: value
     });
-    this.userOptions.value = { value };
+    this.role.value = { value };
   };
 
   passwordChangeHandler = e => {
@@ -54,16 +54,19 @@ class Login extends Component {
       password: e.target.value
     });
   };
-
   submitLogin = e => {
     var headers = new Headers();
+    //prevent page from refresh
     e.preventDefault();
     const data = {
-        email: this.state.email,
+      username: this.state.username,
       password: this.state.password,
-        userOptions: this.state.userOptions
+      role: this.state.role
     };
     axios.defaults.withCredentials = true;//very imp, sets credentials so that backend can load cookies
+    // Customer = Mentor
+    // Restaurant = Mentee
+
     axios.post(hostedAddress+":3001/login", data)
     .then(response => {   
         console.log("Status Code : ", response);
@@ -75,8 +78,9 @@ class Login extends Component {
             authFlag: true
           });
         } else if (response.status === 201 && response.data!="error") {
-          console.log("welcome mentee-");
+          console.log("welcome mentee");
           console.log(cookie.load('cookie'));
+          localStorage.setItem('bearer-token',response.headers.authorization)
           this.setState({
             authFlag: true
           });
@@ -105,8 +109,13 @@ class Login extends Component {
     if(!cookie.load('cookie')){
         redirectVar = <Redirect to= "/login"/>
     }
-    else {
-        redirectVar = <Redirect to= "/home"/>
+    else if(cookie.load('cookie')=='customer')
+    {
+        redirectVar = <Redirect to= "/home_cust"/>
+    }
+    else if(cookie.load('cookie')=='restaurant')
+    {
+        redirectVar = <Redirect to= "/home_rest"/>
     }
     return (
       <div>
@@ -121,7 +130,7 @@ class Login extends Component {
               </div>
               <div class="form-group">
                 <input
-                  onChange={this.emailChangeHandler}
+                  onChange={this.usernameChangeHandler}
                   type="email"
                   class="form-control"
                   name="username"
@@ -141,10 +150,10 @@ class Login extends Component {
               </div>
               <div class="form-group">
                 <Dropdown
-                  ref={ref => (this.userOptions = ref)}
+                  ref={ref => (this.role = ref)}
                   options={options}
-                  onChange={this.userOptionsChangeHandler}
-                  value={this.state.userOptions}
+                  onChange={this.roleChangeHandler}
+                  value={this.state.role}
                   placeholder="I'm a.."
                   required
                 />
@@ -152,10 +161,14 @@ class Login extends Component {
               <div>
               <input
                   ref={ref => (this.submit = ref)}
+                //   onChange={this.usernameChangeHandler}
                   type="submit"
                   class="btn btn-primary"
                   value="Login"
                 />
+                {/* <button onClick={this.submitLogin} class="btn btn-primary">
+                  Login
+                </button> */}
               </div>
               <br></br>
               <div>First time here? <a href="/signup">Sign up!</a></div>
