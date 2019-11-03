@@ -24,10 +24,11 @@ class Preference extends Component {
     }
 
     componentWillMount() {
-        this.setState({
-            authFlag: false
-        });
         let emailID = cookie.load('email');
+        this.setState({
+            authFlag: false,
+            email: emailID
+        });
         const data = {
             email: emailID
         };
@@ -68,7 +69,7 @@ class Preference extends Component {
                         authFlag: true
                     });
                 } else {
-                    alert("Invalid");
+                    console.log("Invalid");
                 }
             })
             .catch(response => {
@@ -93,6 +94,7 @@ class Preference extends Component {
             message: this.state.message,
             connectStatus: this.state.connectStatus
         };
+        console.log('hahah' + JSON.stringify(data))
         var authorization=localStorage.getItem('bearer-token')
         axios.defaults.withCredentials = true;//very imp
         axios.post(hostedAddress + ":3001/sendConnectRequest", data, {headers:{'Authorization':authorization}})
