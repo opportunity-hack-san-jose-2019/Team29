@@ -6,6 +6,7 @@ import HomeMentee from './HomeMentee/HomeMentee';
 import HomeMentor from './HomeMentor/HomeMentor';
 import MenteeProfile from './MenteeProfile/MenteeProfile';
 import UpdateProfileMentee from "./UpdateProfileMentee/UpdateProfileMentee";
+import Preference from './Preference/Preference'
 
 class Main extends Component {
     render(){
@@ -17,6 +18,7 @@ class Main extends Component {
                 <Route path="/home_mentor" component={HomeMentor}/>
                 <Route path="/mentee_profile" component={MenteeProfile}/>
                 <Route path="/update_mentee_prof" component={UpdateProfileMentee}/>
+                <Route path="/sendPref" component={Preference}/>
             </div>
         )
     }
