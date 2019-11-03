@@ -156,9 +156,6 @@ class Login extends Component {
                   class="btn btn-primary"
                   value="Login"
                 />
-                { <button onClick={this.submitLogin} class="btn btn-primary">
-                  Login
-                </button> }
               </div>
               <br></br>
               <div>First time here? <a href="/signup">Sign up!</a></div>
