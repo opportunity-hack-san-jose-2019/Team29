@@ -6,12 +6,14 @@ import {hostedAddress} from "../../GlobalVar"
 import cookie from "react-cookies";
 import {Redirect} from "react-router";
 import Dropdown from "react-dropdown";
+import MentorDisplay from "../Presentational/MentorDisplay";
 
 class Preference extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authFlag: false
+            authFlag: false,
+            mentorList: null
         };
     }
 
@@ -19,76 +21,61 @@ class Preference extends Component {
         this.setState({
             authFlag: false
         });
-    }
-
-    submitPreference = e => {
-        var headers = new Headers();
-
-        e.preventDefault();
-
+        let emailID = cookie.load('email');
         const data = {
-            gender: this.state.gender,
-            ageUpper: this.state.ageUpper,
-            ageLower: this.state.ageLower,
-            industry: this.state.industry,
-            personality: this.state.personality,
-            adviceCategory: this.state.adviceCategory,
-            interest: this.state.interest,
+            email: emailID
         };
-        console.log("data is here")
-        console.log(data)
-        axios.defaults.withCredentials = true;//very imp
-        axios.post(hostedAddress + ":3001/sendPref", data)
-            .then(response => {
-                console.log("Status Code : ", response);
-                if (response.status === 200 && response.data != "exists" && response.data != "error") {
-                    console.log("new mentor created-");
-                    console.log(cookie.load('new1'));
-                    localStorage.setItem('bearer-token', response.headers.authorization)
-                    this.setState({
-                        authFlag: true
-                    });
-                } else if (response.status === 201 && response.data != "exists" && response.data != "error") {
-                    console.log("new mentee created-");
-                    console.log(cookie.load('cookie'));
-                    this.setState({
-                        authFlag: true
-                    });
-                } else if (response.data == "exists") {
-                    alert("There's already an account associated with this email-id :(");
-                    this.setState({
-                        authFlag: false
-                    });
-                } else {
-                    alert("Invalid");
-                }
-            })
-            .catch(response => {
-                    alert("Invalid");
-                    this.setState({
-                        authFlag: false
-                    });
-                }
-            )
-    };
+
+        this.setState({
+            authFlag: true,
+            //mentorList: response.mentorList
+            mentorList: [{name:'Adam', email:'pe@gmail.com', pref: [{key:'Age', value:'34'},{key:'Industry', value:'Finance'}], profile: [{key:'Age', value:'34'},{key:'Industry', value:'Finance'}]}, {name:'Ben', pref: [{key:'Gender', value:'Male'},{key:'Interest', value:'Soccer'}]}]
+        });
+
+
+        // axios.defaults.withCredentials = true;//very imp
+        // axios.post(hostedAddress + ":3001/getMentors", data)
+        //     .then(response => {
+        //         console.log("Status Code : ", response);
+        //         if (response.status === 200 && response.mentorList) {
+        //             this.setState({
+        //                 authFlag: true,
+        //                 //mentorList: response.mentorList
+        //                 mentorList: [{name:'Adam', age:'3'}, {name:'Ben', age:'34'}, {name:'Sean', age:'37'}]
+        //             });
+        //         } else if (response.status === 201 && response.data != "exists" && response.data != "error") {
+        //             console.log("new mentee created-");
+        //             console.log(cookie.load('cookie'));
+        //             this.setState({
+        //                 authFlag: true
+        //             });
+        //         } else {
+        //             alert("Invalid");
+        //         }
+        //     })
+        //     .catch(response => {
+        //             alert("Invalid");
+        //             this.setState({
+        //                 authFlag: false
+        //             });
+        //         }
+        //     )
+    }
 
     render() {
 
         return (
-            <div>
-                <div class="container">
-                    <div class="login-form">
-                        <form onSubmit={this.submitPreference}>
-                            <div class="main-div">
-                                <div class="panel">
-                                    <h2>Mentor Preference Selection</h2>
-                                    <p>Let us know what type of mentors you would like to get and we will give the best
-                                        matches</p>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+            <div
+                className='dropdown-overlay default-pointer'>
+                <ul>
+                    {this.state.mentorList.map((item, key) => (
+                        <ul
+                            key={key}
+                            role='presentation'>
+                            <MentorDisplay item={item}/>
+                        </ul>
+                    ))}
+                </ul>
             </div>
         );
     }
