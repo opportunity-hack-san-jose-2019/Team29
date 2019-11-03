@@ -2,12 +2,15 @@ import React, { Component } from "react";
 import "../../App.css";
 import axios from "axios";
 import cookie from "react-cookies";
+import { Redirect } from "react-router";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
-import Checkbox from '../Checkbox/Checkbox';
-
+import { connect } from 'react-redux';
+import { login } from "../../redux-files/action";
+import { setTimeout } from "timers";
+import Checkbox from "../Checkbox/Checkbox";
+// const hostedAddress = "http://localhost";
 const hostedAddress="http://10.225.73.79";
-
 let redirectVar = null;
 const cityOptions = ["Alexandria, VA", "Arlington, VA", "Atlanta, GA", "Baltimore, MD", "Boston, MA", "Charlotte, NC", "Chicago, IL", "Concord, CA", "Dallas, TX", "Jacksonville, FL", "Jersey City, NJ", "Los Angeles, CA", "Menlo Park, CA", "Miami, FL", "New York, NY", "Philadelphia, PA", "Phoenix, AZ", "Providence, RI", "San Francisco, CA", "San Jose, CA", "Seattle, WA", "Tampa Bay, FL", "Wilmington, DE", "Woodbridge, VA"];
 const ethnicityOptions = ["White", "Asian", "Black"];
@@ -17,6 +20,7 @@ const personalitiesOptions = ["Extrovert", "Introvert"];
 const adviceCategoryOptions = ["Life", "Career", "Professional/Technical Skills", "Leadership"];
 const mediaOptions = ["Newspaper", "YearUp website", "YearUp employee", "YearUp mentees"];
 const placeToMeetOptions = ["Diablo Valley College, Pleasant Hill", "San Francisco Campus, San Francisco", "Silicon Valley, San Jose"];
+const educationLevelOptions = ["No formal education", "Primary education", "Secondary education or high school", "GED", "Vocational qualification", "Bachelor's degree", "Master's degree", "Doctorate or higher"];
 const skillSetsCheckboxes = [
     {
         name: "Public Speaking",
@@ -63,7 +67,8 @@ const communitiesCheckboxes = [
     }
 ];
 
-class MenteeProfile extends Component {
+
+class MentorProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -80,7 +85,7 @@ class MenteeProfile extends Component {
             address: "",
             profilePhoto: "",
             age: "",
-            interest: "", // comma-separated
+            interest: "",
             gender: "", // dropdown
             industry: "", // dropdown
             personalities: "", // dropdown
@@ -91,7 +96,11 @@ class MenteeProfile extends Component {
             communities: new Map(),
             expectations: "",
             linkedinProfile: "",
-            phone: ""
+            employer: "",
+            jobTitle: "",
+            mentoringReason: "",
+            mentoringExperience: "",
+            educationLevel: ""
         };
         this.userOptionChangeHandler = this.userOptionChangeHandler.bind(this);
         this.homeCityChangeHandler = this.homeCityChangeHandler.bind(this);
@@ -105,6 +114,7 @@ class MenteeProfile extends Component {
         this.mediaChangeHandler = this.mediaChangeHandler.bind(this);
         this.adviceCategoryChangeHandler = this.adviceCategoryChangeHandler.bind(this);
         this.placeToMeetChangeHandler = this.placeToMeetChangeHandler.bind(this);
+        this.educationLevelChangeHandler = this.educationLevelChangeHandler.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     userOptionChangeHandler = value => {
@@ -139,21 +149,14 @@ class MenteeProfile extends Component {
         console.log('skillSetsChangeHandler');
         const item = e.target.name;
         const isChecked = e.target.checked;
-        console.log('item ' + item);
-
-        this.setState(prevState => ({
-            skillSets: prevState.skillSets.set(item, isChecked) ,
-            isChecked: true
-        }));
+        this.setState({ skillSets: this.state.skillSets.set(item, isChecked) });
     };
-
     communitiesChangeHandler = (e) => {
         console.log('communitiesChangeHandler');
         const item = e.target.name;
         const isChecked = e.target.checked;
         this.setState(prevState => ({ communities: prevState.communities.set(item, isChecked) }));
     };
-
     mediaChangeHandler = val => {
         this.setState({ media: val });
         this.media.value = { val };
@@ -166,6 +169,12 @@ class MenteeProfile extends Component {
         this.setState({ placeToMeet: val });
         this.placeToMeet.value = { val };
     };
+
+    educationLevelChangeHandler = val => {
+        this.setState({ educationLevel: val });
+        this.educationLevel.value = { val };
+    };
+
     handleSubmit = e => {
         var headers = new Headers();
         //prevent page from refresh
@@ -173,9 +182,6 @@ class MenteeProfile extends Component {
         let emailID = cookie.load('email');
         const data = {
             email: emailID,
-            firstName: (this.firstName && this.firstName.value),
-            lastName: (this.lastName && this.lastName.value),
-            phone: (this.phone && this.phone.value),
             username: this.state.username,
             password: this.state.password,
             userOption: this.state.userOption,
@@ -185,7 +191,6 @@ class MenteeProfile extends Component {
             address: this.address.value,
             profilePhoto: "",
             age: this.age.value,
-            interest: (this.interest.value && this.interest.value.toLowerCase()),
             gender: this.state.gender,
             industry: this.state.industry,
             personalities: this.state.personalities,
@@ -195,16 +200,22 @@ class MenteeProfile extends Component {
             placeToMeet: this.state.placeToMeet,
             communities: this.state.communities, // checkbox
             expectations: this.expectations.value,
-            linkedinProfile: this.linkedinProfile.value
+            linkedinProfile: this.linkedinProfile.value,
+
+            // only for mentor fields
+            employer: this.employer.value,
+            jobTitle: this.jobTitle.value,
+            mentoringReason: this.mentoringReason.value,
+            mentoringExperience: this.mentoringExperience.value,
+            educationLevel: this.state.educationLevel
+
         };
-        console.log('data.linkedinProfile ');
+        console.log('data');
         axios.defaults.withCredentials = true;//very imp
         // Customer = Mentor
         // Restaurant = Mentee
-        axios.post(hostedAddress+":3001/updateProfileMentee", data)
+        axios.post(hostedAddress+":3001/updateProfileMentor", data)
             .then(response => {
-                console.log('skillSets: ' + JSON.stringify(this.state.skillSets));
-
                 console.log("Status Code : ", response);
                 if (response.data === "Mentor" && response.data!="error") {
                     console.log("welcome mentor-");
@@ -296,7 +307,7 @@ class MenteeProfile extends Component {
                                         //   onChange={this.usernameChangeHandler}
                                         type="text"
                                         className="form-control"
-                                        name="name"
+                                        name="address"
                                         placeholder="Address"
                                     />
                                 </div>
@@ -305,18 +316,9 @@ class MenteeProfile extends Component {
                                         ref={ref => (this.age = ref)}
                                         type="text"
                                         className="form-control"
-                                        name="name"
+                                        name="age"
                                         placeholder="Age"
                                         required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <input
-                                        ref={ref => (this.interest = ref)}
-                                        type="text"
-                                        className="form-control"
-                                        name="interest"
-                                        placeholder="Interest"
                                     />
                                 </div>
                                 <div className="form-group">
@@ -378,7 +380,6 @@ class MenteeProfile extends Component {
                                     </React.Fragment>
                                 </div>
 
-
                                 <div className="form-group">
                                     <Dropdown
                                         ref={ref => (this.placeToMeet = ref)}
@@ -388,26 +389,24 @@ class MenteeProfile extends Component {
                                         placeholder="What is your favorite campus (keep in mind that mentees may intern in areas outside of the campus city)?"
                                     />
                                 </div>
+
                                 <div className="form-group">
                                     <input
                                         ref={ref => (this.expectations = ref)}
                                         //   onChange={this.usernameChangeHandler}
                                         type="text"
                                         className="form-control"
-                                        name="name"
+                                        name="expectations"
                                         placeholder="What would you want your mentor/mentee to know about you before you meet?"
-                                        required
                                     />
                                 </div>
                                 <div className="form-group">
                                     <input
                                         ref={ref => (this.linkedinProfile = ref)}
-                                        //   onChange={this.usernameChangeHandler}
                                         type="text"
                                         className="form-control"
-                                        name="name"
+                                        name="linkedinProfile"
                                         placeholder="Do you have a LinkedIn profile link that you can share with us?"
-                                        required
                                     />
                                 </div>
 
@@ -426,7 +425,56 @@ class MenteeProfile extends Component {
                                 </div>
 
                                 <div className="form-group">
+                                    <input
+                                        ref={ref => (this.employer = ref)}
+                                        type="text"
+                                        className="form-control"
+                                        name="employer"
+                                        placeholder="Employer"
+                                    />
                                 </div>
+
+                                <div className="form-group">
+                                    <input
+                                        ref={ref => (this.jobTitle = ref)}
+                                        type="text"
+                                        className="form-control"
+                                        name="jobTitle"
+                                        placeholder="Job Title"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <input
+                                        ref={ref => (this.mentoringReason = ref)}
+                                        type="text"
+                                        className="form-control"
+                                        name="mentoringReason"
+                                        placeholder="Why do you want to be a mentor?"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <input
+                                        ref={ref => (this.mentoringExperience = ref)}
+                                        type="text"
+                                        className="form-control"
+                                        name="mentoringExperience"
+                                        placeholder="What (if any) mentoring experience do you have?"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <Dropdown
+                                        ref={ref => (this.educationLevel = ref)}
+                                        options={educationLevelOptions}
+                                        onChange={this.educationLevelChangeHandler}
+                                        value={this.state.educationLevel}
+                                        placeholder="Highest level of education completed"
+                                    />
+                                </div>
+
+
                                 <div>
                                     <input
                                         ref={ref => (this.submit = ref)}
@@ -445,4 +493,4 @@ class MenteeProfile extends Component {
         );
     }
 }
-export default MenteeProfile;
+export default MentorProfile;

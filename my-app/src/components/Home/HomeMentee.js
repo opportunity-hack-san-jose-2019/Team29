@@ -13,10 +13,14 @@ class Preference extends Component {
         super(props);
         this.state = {
             authFlag: false,
-            mentorList: null
+            mentorList: null,
+            email: "",
+            message: "",
+            connectStatus: "Request"
         };
         this.submitRequest = this.submitRequest.bind(this);
         this.writeRequest = this.writeRequest.bind(this);
+        this.messageChangeHandler = this.messageChangeHandler.bind(this);
     }
 
     componentWillMount() {
@@ -75,18 +79,49 @@ class Preference extends Component {
             )
     }
 
-    submitRequest = e => {
-        alert('HELLOCJWNSEJN')
+    messageChangeHandler = e => {
+        this.setState({
+            message: e.target.value
+        });
     };
 
-    writeRequest = (name) => {
-        console.log("name is ", name)
-        var e = document.getElementById(name);
+    submitRequest = (email) => {
+        const data = {
+            mentee_email: this.state.email,
+            mentor_email: email,
+            message: this.state.message,
+            connectStatus: this.state.connectStatus
+        };
+        var authorization=localStorage.getItem('bearer-token')
+        axios.defaults.withCredentials = true;//very imp
+        axios.post(hostedAddress + ":3001/sendConnectRequest", data, {headers:{'Authorization':authorization}})
+            .then(response => {
+                console.log("Status Code : ", response);
+                if (response.status === 200 ) {
+                    this.setState({
+                        authFlag: true
+                    });
+                    alert('request sent!')
+                    window.location.reload()
+                } else {
+                    alert("Invalid");
+                }
+            })
+            .catch(response => {
+                    alert("Invalid");
+                    this.setState({
+                        authFlag: false
+                    });
+                }
+            )
+    };
+
+    writeRequest = (email) => {
+        var e = document.getElementById(email);
         e.style.display = 'block';
     };
 
     render() {
-
         return (
             <div
                 className='dropdown-overlay default-pointer'>
@@ -96,23 +131,23 @@ class Preference extends Component {
                             key={key}
                             role='presentation'>
                             <div style={{display: "flex"}}>
-                            <div style={{display: "flex", "border-style": "solid", "margin": "30px", "padding": "30px", "width": "300px" }}>
+                            <div style={{display: "flex", "border-style": "solid", "margin": "30px", "padding": "30px", "width": "300px", "border-radius": "25px", "background-color": "#d5f4e6" }}>
                                 <MentorDisplay item={item} />
-                                <button onClick={() => this.writeRequest(item.name)} className="btn btn-primary" style={{height: "20px", "margin-top": "auto", "margin-bottom": "auto", "margin-left": "50px"}}>
+                                <button onClick={() => this.writeRequest(item.email)} className="btn btn-primary" style={{height: "20px", "margin-top": "auto", "margin-bottom": "auto", "margin-left": "50px"}}>
                                     Request
                                 </button>
                             </div>
-                            <div style={{ display: 'none', "margin-top": "auto", "margin-bottom": "auto", "padding-left": "50px" }} id={item.name}>
+                            <div style={{ display: 'none', "margin-top": "auto", "margin-bottom": "auto", "padding-left": "50px" }} id={item.email}>
                                 <input
                                     ref={ref => (this.messageToMentor = ref)}
-                                    onChange={this.ageUpperChangeHandler}
                                     type="text"
                                     className="form-control"
                                     name="messageToMentor"
                                     placeholder="Type your message to your mentor"
                                     style={{ height: "200px", "margin-top": "auto", "margin-bottom": "auto", "width":"300px" }}
+                                    onChange={this.messageChangeHandler}
                                 />
-                                <button onClick={this.submitRequest} className="btn btn-primary" style={{height: "20px", "margin-left": "10px"}}>
+                                <button onClick={() => this.submitRequest(item.email)} className="btn btn-primary" style={{height: "20px", "margin-left": "10px"}}>
                                     Send
                                 </button>
                             </div>

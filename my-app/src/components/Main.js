@@ -9,7 +9,9 @@ import Landing from "./Landing/Landing";
 import LandingImage from "./Landing/LandingImage";
 import Preference from './Preference/Preference'
 import MenteeProfile from "./MenteeProfile/MenteeProfile";
+import MentorProfile from "./MentorProfile/MentorProfile";
 import UpdateProfileMentee from "./UpdateProfileMentee/UpdateProfileMentee";
+import MacthesForMentor from "./Matches/MacthesForMentor";
 
 
 class Main extends Component {
@@ -25,6 +27,8 @@ class Main extends Component {
                 <Route path="/profile" component={Profile}/>
                 <Route path="/mentee_profile" component={MenteeProfile}/>
                 <Route path="/update_mentee_prof" component={UpdateProfileMentee}/>
+                <Route path="/mentor_profile" component={MentorProfile}/>
+                <Route path="/mentor_matches" component={MacthesForMentor}/>
             </div>
         )
     }
