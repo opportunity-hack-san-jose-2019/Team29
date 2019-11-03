@@ -4,8 +4,8 @@ import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import HomeMentee from './Home/HomeMentee';
 import HomeMentor from './Home/HomeMentor';
-import Profile from './Profile/Profile';
-import Landing from "./Landing/Landing";
+import MenteeProfile from "./MenteeProfile/MenteeProfile";
+import UpdateProfileMentee from "./UpdateProfileMentee/UpdateProfileMentee";
 import LandingImage from "./Landing/LandingImage";
 import Preference from './Preference/Preference'
 
