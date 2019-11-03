@@ -12,7 +12,8 @@ import MenteeProfile from "./MenteeProfile/MenteeProfile";
 import MentorProfile from "./MentorProfile/MentorProfile";
 import UpdateProfileMentee from "./UpdateProfileMentee/UpdateProfileMentee";
 import MacthesForMentor from "./Matches/MacthesForMentor";
-
+import MacthesForMentee from "./Matches/MatchesForMentee";
+import Donation from "./Donation";
 
 class Main extends Component {
     render(){
@@ -29,6 +30,8 @@ class Main extends Component {
                 <Route path="/update_mentee_prof" component={UpdateProfileMentee}/>
                 <Route path="/mentor_profile" component={MentorProfile}/>
                 <Route path="/mentor_matches" component={MacthesForMentor}/>
+                <Route path="/mentee_matches" component={MacthesForMentee}/>
+                <Route path="/donation" component={Donation}/>
             </div>
         )
     }
