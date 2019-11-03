@@ -14,6 +14,7 @@ sendConnectRequest = (req, res, conn) => {
         else{
             console.log("result",result);
             let mentee_name=result[0].mentee_firstName+" "+result[0].mentee_lastName;
+            // setTimeout(("timeout") , 400)
     Mentor.updateOne({ mentor_email: req.body.mentor_email },
         {
             $push: {

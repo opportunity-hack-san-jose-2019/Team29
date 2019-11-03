@@ -8,7 +8,7 @@ getConnectRequest = (req, res, conn) => {
     console.log(req.body);
     let output = "";
 
-    Mentor.find({ mentor_email: req.body.mentor_email} , {connect:{$elemMatch:{ connectStatus:{$nin: ["Accept", "Reject"] }}}}, {mentor_firstName:1, mentor_lastName:1, connect: 1}, function (error, results) {
+    Mentor.find({ mentor_email: req.body.mentor_email, connect:{$elemMatch:{connectStatus:"Request"}}}, { connect: 1}, function (error, results) {
         if (error) {
             console.log("error in results ");
             throw error;
@@ -20,4 +20,4 @@ getConnectRequest = (req, res, conn) => {
         }
 })
 }
-exports.getConnectRequest = getConnectRequest;
+exports.getConnectRequest = getConnectRequest; 

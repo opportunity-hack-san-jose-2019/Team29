@@ -25,7 +25,7 @@ getMentors = (req, res, conn) => {
     Mentee.find({ mentee_email: req.body.email }, function (err, results) {
         if (err) { output = "Failure" }
         else {mentorList=[];
-            console.log("fghgfjhgljkhfcd",results[0].prefGender)
+            console.log("fghgfjhgljkhfcd",results)
             prefGender = results[0].prefGender;
             prefAgeUpper = results[0].prefAgeUpper;
             prefAgeLower = results[0].prefAgeLower;

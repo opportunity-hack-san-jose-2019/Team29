@@ -6,7 +6,7 @@ const GlobalVar = require("../../GlobalVar");
 getMatchesME = (req, res, conn) => {
     console.log(req.body);
     let output = "";
-    Mentor.find({ "connect.mentee_email": req.body.mentee_email} , {connect:{$elemMatch:{ connectStatus:{$in: ["Accept"] }}}}, { connect: 1 }, function (error, results) {
+    Mentor.find({ "connect.mentee_email": req.body.mentee_email}, { connect: 1 }, function (error, results) {
         if (error) {
             console.log("error in results ");
             throw error;
