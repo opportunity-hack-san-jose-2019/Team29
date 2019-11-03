@@ -20,12 +20,16 @@ class Signup extends Component {
             email: "",
             password: "",
             authFlag: false,
-            userOptions: ""
+            userOptions: "",
+            firstName: "",
+            lastName: ""
         };
         this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.roleChangeHandler = this.roleChangeHandler.bind(this);
         this.submitSignup = this.submitSignup.bind(this);
+        this.lastNameChangeHandler = this.lastNameChangeHandler.bind(this);
+        this.firstNameChangeHandler = this.firstNameChangeHandler.bind(this);
     }
 
     componentWillMount() {
@@ -37,6 +41,16 @@ class Signup extends Component {
     usernameChangeHandler = e => {
         this.setState({
             email: e.target.value
+        });
+    };
+    lastNameChangeHandler = e => {
+        this.setState({
+            lastName: e.target.value
+        });
+    };
+    firstNameChangeHandler = e => {
+        this.setState({
+            firstName: e.target.value
         });
     };
     roleChangeHandler = value => {
@@ -59,8 +73,8 @@ class Signup extends Component {
             email: this.state.email,
             password: this.state.password,
             userOptions: this.state.userOptions,
-            firstName: this.firstName.value,
-            lastName: this.lastName.value
+            firstName: this.state.firstName,
+            lastName: this.state.lastName
         };
         console.log('data.lastName ' + data.lastName);
         console.log('data.firstName ' + data.firstName);
@@ -125,10 +139,11 @@ class Signup extends Component {
                                 <div class="form-group">
                                     <input
                                         ref={ref => (this.firstName = ref)}
-                                        //   onChange={this.usernameChangeHandler}
+                                        onChange={this.firstNameChangeHandler}
                                         type="text"
                                         class="form-control"
                                         name="firstName"
+                                        value={this.state.firstName}
                                         placeholder="First Name"
                                         required
                                     />
@@ -137,9 +152,10 @@ class Signup extends Component {
                                 <div class="form-group">
                                     <input
                                         ref={ref => (this.lastName = ref)}
-                                        //   onChange={this.usernameChangeHandler}
+                                        onChange={this.lastNameChangeHandler}
                                         type="text"
                                         class="form-control"
+                                        value={this.state.lastName}
                                         name="lastName"
                                         placeholder="Last Name"
                                         required
