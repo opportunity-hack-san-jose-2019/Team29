@@ -17,10 +17,10 @@ class Signup extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
+            email: "",
             password: "",
             authFlag: false,
-            role: ""
+            userOptions: ""
         };
         this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
@@ -34,14 +34,14 @@ class Signup extends Component {
     }
     usernameChangeHandler = e => {
         this.setState({
-            username: e.target.value
+            email: e.target.value
         });
     };
     roleChangeHandler = value => {
         this.setState({
-            role: value
+            userOptions: value
         });
-        this.role.value = { value };
+        this.userOptions.value = { value };
     };
 
     passwordChangeHandler = e => {
@@ -54,16 +54,14 @@ class Signup extends Component {
         e.preventDefault();
 
         const data = {
-            username: this.state.username,
+            email: this.state.email,
             password: this.state.password,
-            userOption: this.state.userOption,
+            userOptions: this.state.userOptions,
             firstName: this.firstName.value,
             lastName: this.lastName.value
         };
         console.log('data.lastName ' + data.lastName);
         console.log('data.firstName ' + data.firstName);
-        console.log(data.username);
-        console.log(data.userOption);
 
         axios.defaults.withCredentials = true;//very imp
         axios.post(hostedAddress+":3001/signup", data)
@@ -158,7 +156,7 @@ class Signup extends Component {
         onChange={this.usernameChangeHandler}
         type="email"
     class="form-control"
-        name="username"
+        name="email"
         placeholder="Email"
         required
         />
@@ -175,10 +173,10 @@ class Signup extends Component {
         </div>
         <div class="form-group">
             <Dropdown
-        ref={ref => (this.role = ref)}
+        ref={ref => (this.userOptions = ref)}
         options={options}
         onChange={this.roleChangeHandler}
-        value={this.state.role}
+        value={this.state.userOptions}
         placeholder="I'm a.."
         required
         />
