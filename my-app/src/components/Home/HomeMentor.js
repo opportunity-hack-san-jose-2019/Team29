@@ -85,12 +85,14 @@ class Preference extends Component {
         e.style.display = 'block';
     };
 
-    submitRequest = (connectId, response) => {
+    submitRequest = (connectId, name, email, response) => {
         const data = {
             mentor_email: this.state.mentor_email,
             appointment: this.state.appointment,
             connectStatus: response,
-            connectId: connectId
+            connectId: connectId,
+            mentee_name: name,
+            mentee_email: email
         };
         console.log('data is ', JSON.stringify(data))
         var authorization=localStorage.getItem('bearer-token')
@@ -129,7 +131,7 @@ class Preference extends Component {
             <div
                 className='dropdown-overlay default-pointer'>
                 <ul>
-                    {this.state.menteeList ? this.state.menteeList.map((item, key) => (
+                    {this.state.menteeList ? this.state.menteeList.filter(mentee => mentee.connectStatus == "Request").map((item, key) => (
                         <ul
                             key={key}
                             role='presentation'>
@@ -139,7 +141,7 @@ class Preference extends Component {
                                     <button onClick={() => this.arrangeMeetup(item.mentee_email)} className="btn btn-primary" style={{height: "20px", "margin-top": "auto", "margin-bottom": "auto", "margin-left": "50px"}}>
                                         Accept
                                     </button>
-                                    <button onClick={() => this.submitRequest(item.connectId, 'Reject')} className="btn btn-primary" style={{height: "20px", "margin-top": "auto", "margin-bottom": "auto", "margin-left": "50px"}}>
+                                    <button onClick={() => this.submitRequest(item.connectId, item.mentee_name, item.mentee_email, 'Reject')} className="btn btn-primary" style={{height: "20px", "margin-top": "auto", "margin-bottom": "auto", "margin-left": "50px"}}>
                                         Decline
                                     </button>
                                 </div>
