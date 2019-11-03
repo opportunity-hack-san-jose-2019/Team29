@@ -71,7 +71,7 @@ class Login extends Component {
       const cookies = new Cookies();
       cookies.set('email', this.state.email, { path: '/' });
       console.log(cookies.get('cookie'));
-      cookies.set('cookie', this.state.userOptions, { path: '/' });
+      cookies.set('cookie', this.state.userOptions.value, { path: '/' });
 
         axios.post(hostedAddress + ":3001/login", data)
             .then(response => {

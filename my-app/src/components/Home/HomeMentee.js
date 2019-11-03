@@ -51,32 +51,32 @@ class Preference extends Component {
         var authorization=localStorage.getItem('bearer-token')
         console.log("authorization",authorization)
         axios.defaults.withCredentials = true;//very imp
-        axios.post(hostedAddress + ":3001/getMentors", data, {headers:{'Authorization':authorization}})
-            .then(response => {
-                console.log("Status Code : ", response);
-                if (response.status === 200 && response.mentorList) {
-                    this.setState({
-                        authFlag: true,
-                        mentorList: response.mentorList
-                        //mentorList: [{name:'Adam', age:'3'}, {name:'Ben', age:'34'}, {name:'Sean', age:'37'}]
-                    });
-                } else if (response.status === 201 && response.data != "exists" && response.data != "error") {
-                    console.log("new mentee created-");
-                    console.log(cookie.load('cookie'));
-                    this.setState({
-                        authFlag: true
-                    });
-                } else {
-                    alert("Invalid");
-                }
-            })
-            .catch(response => {
-                    alert("Invalid");
-                    this.setState({
-                        authFlag: false
-                    });
-                }
-            )
+        // axios.post(hostedAddress + ":3001/getMentors", data, {headers:{'Authorization':authorization}})
+        //     .then(response => {
+        //         console.log("Status Code : ", response);
+        //         if (response.status === 200 && response.mentorList) {
+        //             this.setState({
+        //                 authFlag: true,
+        //                 mentorList: response.mentorList
+        //                 //mentorList: [{name:'Adam', age:'3'}, {name:'Ben', age:'34'}, {name:'Sean', age:'37'}]
+        //             });
+        //         } else if (response.status === 201 && response.data != "exists" && response.data != "error") {
+        //             console.log("new mentee created-");
+        //             console.log(cookie.load('cookie'));
+        //             this.setState({
+        //                 authFlag: true
+        //             });
+        //         } else {
+        //             alert("Invalid");
+        //         }
+        //     })
+        //     .catch(response => {
+        //             alert("Invalid");
+        //             this.setState({
+        //                 authFlag: false
+        //             });
+        //         }
+        //     )
     }
 
     messageChangeHandler = e => {

@@ -40,6 +40,7 @@ class MenteeProfile extends Component {
         let token=localStorage.getItem('bearer-token');
         console.log('dsg',token)
         let data={'email':emailid};
+        console.log(data.email);
         img_src=hostedAddress+':3001/'+cookie.load('idGeneric')+'.jpg'
         console.log('ayaa1');
         axios.defaults.withCredentials = true;//very imp, sets credentials so that backend can load cookies
@@ -47,6 +48,18 @@ class MenteeProfile extends Component {
             .then((response) => {
                 console.log('getProfileMentee' + JSON.stringify(response));
                 // console.log(response.data[0]);
+                let me_communities='';
+                for(let item in response.data[0].mentee_communities)
+                {
+                    me_communities+=item;
+                    me_communities+=',';
+                }
+                let me_skillSets='';
+                for(let item in response.data[0].mentee_skillSets)
+                {
+                    me_skillSets+=item;
+                    me_skillSets+=',';
+                }
                 this.setState({
                     email:response.data[0].mentee_email,
                     firstName:response.data[0].mentee_firstName,
@@ -55,19 +68,19 @@ class MenteeProfile extends Component {
                     homeCity:response.data[0].mentee_homeCity,
                     workCity:response.data[0].mentee_workCity,
                     ethnicity:response.data[0].mentee_ethnicity,
-                    profilePhoto:response.data[0].mentee_profilePhoto,
+                    address:response.data[0].mentee_address,
+                    // profilePhoto:response.data[0].mentee_profilePhoto,
                     interest: response.data[0].mentee_interest,
                     industry: response.data[0].mentee_industry,
                     personalities: response.data[0].mentee_personalities,
                     adviceCategory: response.data[0].mentee_adviceCategory,
                     age: response.data[0].mentee_age,
-                    skillSets: response.data[0].mentor_skillSets, // checkbox
+                    skillSets: me_skillSets, // checkbox
                     media: response.data[0].mentee_media,
                     placeToMeet: response.data[0].mentee_placeToMeet,
-                    communities: response.data[0].mentee_communities, // checkbox
+                    communities: me_communities, // checkbox
                     expectations: response.data[0].mentee_expectations,
-                    linkedinProfile: response.data[0].mentee_linkedinProfile,
-                    address:response.data[0].mentee_addess
+                    linkedinProfile: response.data[0].mentee_linkedinProfile
                 });
             })
             .catch(()=>{console.log("error")});

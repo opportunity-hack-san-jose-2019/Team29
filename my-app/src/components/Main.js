@@ -20,6 +20,7 @@ class Main extends Component {
     render(){
         return(
             <div>
+                <Route path="/" component={Landing}/>
                 <Route path="/landing_image" component={LandingImage}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/sendPref" component={Preference}/>
