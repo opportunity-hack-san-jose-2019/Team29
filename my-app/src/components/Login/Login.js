@@ -64,23 +64,19 @@ class Login extends Component {
       role: this.state.role
     };
     axios.defaults.withCredentials = true;//very imp, sets credentials so that backend can load cookies
-    // Customer = Mentor
-    // Restaurant = Mentee
-
     axios.post(hostedAddress+":3001/login", data)
     .then(response => {   
         console.log("Status Code : ", response);
         if (response.status === 200 && response.data!="error") {
-          console.log("welcome mentor-");
+          console.log("welcome customer-");
           console.log(cookie.load('cookie'));
           localStorage.setItem('bearer-token',response.headers.authorization)
           this.setState({
             authFlag: true
           });
         } else if (response.status === 201 && response.data!="error") {
-          console.log("welcome mentee");
+          console.log("welcome restaurant-");
           console.log(cookie.load('cookie'));
-          localStorage.setItem('bearer-token',response.headers.authorization)
           this.setState({
             authFlag: true
           });
