@@ -93,14 +93,14 @@ class MacthesForMentor extends Component {
         const data = {
             sender_email: this.state.mentor_email,
             receiver_email: email,
-            message: this.state.message,
+            feedbackMessage: this.state.message,
             sender: 'Mentor',
             //sender_name: ,
             //receiver_name:
         };
         var authorization=localStorage.getItem('bearer-token')
         axios.defaults.withCredentials = true;//very imp
-        axios.post(hostedAddress + ":3001/report", data, {headers:{'Authorization':authorization}})
+        axios.post(hostedAddress + ":3001/feedback", data, {headers:{'Authorization':authorization}})
             .then(response => {
                 console.log("Status Code : ", response);
                 if (response.status === 200 ) {

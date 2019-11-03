@@ -150,7 +150,7 @@ class Preference extends Component {
                                     style={{ height: "200px", "margin-top": "auto", "margin-bottom": "auto", "width":"300px" }}
                                     onChange={this.messageChangeHandler}
                                 />
-                                <button onClick={() => this.submitRequest(item.email)} className="btn btn-primary" style={{height: "20px", "margin-left": "10px"}}>
+                                <button onClick={() => this.submitRequest(item[0].email)} className="btn btn-primary" style={{height: "20px", "margin-left": "10px"}}>
                                     Send
                                 </button>
                             </div>
