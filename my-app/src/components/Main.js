@@ -8,6 +8,8 @@ import Profile from './Profile/Profile';
 import Landing from "./Landing/Landing";
 import LandingImage from "./Landing/LandingImage";
 import Preference from './Preference/Preference'
+import MenteeProfile from "./MenteeProfile/MenteeProfile";
+import UpdateProfileMentee from "./UpdateProfileMentee/UpdateProfileMentee";
 
 
 class Main extends Component {
@@ -21,6 +23,8 @@ class Main extends Component {
                 <Route path="/home_mentee" component={HomeMentee}/>
                 <Route path="/home_mentor" component={HomeMentor}/>
                 <Route path="/profile" component={Profile}/>
+                <Route path="/mentee_profile" component={MenteeProfile}/>
+                <Route path="/update_mentee_prof" component={UpdateProfileMentee}/>
             </div>
         )
     }
