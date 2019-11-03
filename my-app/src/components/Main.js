@@ -8,11 +8,12 @@ import Profile from './Profile/Profile';
 import Landing from "./Landing/Landing";
 import LandingImage from "./Landing/LandingImage";
 import Preference from './Preference/Preference'
-import MenteeProfile from "./MenteeProfile/MenteeProfile";
 import MentorProfile from "./MentorProfile/MentorProfile";
-import UpdateProfileMentee from "./UpdateProfileMentee/UpdateProfileMentee";
+import MenteeProfile from "./MenteeProfile/MenteeProfile";
 import MacthesForMentor from "./Matches/MacthesForMentor";
 import MacthesForMentee from "./Matches/MatchesForMentee";
+import UpdateMenteeProfile from "./UpdateMenteeProfile/UpdateMenteeProfile";
+import UpdateMentorProfile from "./UpdateMentorProfile/UpdateMentorProfile";
 import Donation from "./Donation";
 
 class Main extends Component {
@@ -25,13 +26,14 @@ class Main extends Component {
                 <Route path="/signup" component={Signup}/>
                 <Route path="/home_mentee" component={HomeMentee}/>
                 <Route path="/home_mentor" component={HomeMentor}/>
-                <Route path="/profile" component={Profile}/>
-                <Route path="/mentee_profile" component={MenteeProfile}/>
-                <Route path="/update_mentee_prof" component={UpdateProfileMentee}/>
-                <Route path="/mentor_profile" component={MentorProfile}/>
                 <Route path="/mentor_matches" component={MacthesForMentor}/>
                 <Route path="/mentee_matches" component={MacthesForMentee}/>
                 <Route path="/donation" component={Donation}/>
+                <Route path="/mentee_profile" component={MenteeProfile}/>
+                <Route path="/update_mentee_profile" component={UpdateMenteeProfile}/>
+                <Route path="/mentor_profile" component={MentorProfile}/>
+                <Route path="/update_mentor_profile" component={UpdateMentorProfile}/>
+
             </div>
         )
     }
