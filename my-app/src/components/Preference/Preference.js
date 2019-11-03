@@ -110,10 +110,13 @@ class Preference extends Component {
             interest: this.state.interest,
             email: this.state.email
         };
+
         console.log("data is here")
         console.log(data)
         axios.defaults.withCredentials = true;//very imp
-        axios.post(hostedAddress + ":3001/sendPref", data)
+        var authorization=localStorage.getItem('bearer-token')
+        console.log("authorization",authorization)
+        axios.post(hostedAddress + ":3001/sendPref", data,{headers:{'Authorization':authorization}})
             .then(response => {
                 console.log("Status Code : ", response);
                 if (response.status === 200 && response.data != "exists" && response.data != "error") {
@@ -170,7 +173,6 @@ class Preference extends Component {
                                         onChange={this.genderChangeHandler}
                                         value={this.state.gender}
                                         placeholder="Preferred Gender"
-                                        required
                                     />
                                 </div>
                                 <div class="form-group">
@@ -182,7 +184,6 @@ class Preference extends Component {
                                         class="form-control"
                                         name="ageUpper"
                                         placeholder="Age Upper Bound"
-                                        required
                                     />
                                 </div>
                                 <div className="form-group">
@@ -194,7 +195,6 @@ class Preference extends Component {
                                         className="form-control"
                                         name="ageLower"
                                         placeholder="Age Lower Bound"
-                                        required
                                     />
                                 </div>
                                 <div className="form-group">
@@ -204,7 +204,6 @@ class Preference extends Component {
                                         onChange={this.industryChangeHandler}
                                         value={this.state.industry}
                                         placeholder="Preferred Industry"
-                                        required
                                     />
                                 </div>
                                 <div className="form-group">
@@ -214,7 +213,6 @@ class Preference extends Component {
                                         onChange={this.personalityChangeHandler}
                                         value={this.state.personality}
                                         placeholder="Preferred Personality"
-                                        required
                                     />
                                 </div>
                                 <div className="form-group">
@@ -224,10 +222,18 @@ class Preference extends Component {
                                         onChange={this.adviceCategoryChangeHandler}
                                         value={this.state.adviceCategory}
                                         placeholder="Preferred Advice Category"
-                                        required
                                     />
                                 </div>
-
+                                <div className="form-group">
+                                    <input
+                                        ref={ref => (this.interest = ref)}
+                                        onChange={this.interestChangeHandler}
+                                        type="text"
+                                        className="form-control"
+                                        name="interest"
+                                        placeholder="Interest"
+                                    />
+                                </div>
                                 <div>
                                     <input
                                         ref={ref => (this.submit = ref)}

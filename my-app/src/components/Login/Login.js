@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import {login} from "../../redux-files/action";
 import {setTimeout} from "timers";
 import {hostedAddress} from "../../GlobalVar"
+import Cookies from 'universal-cookie';
 
 let redirectVar = null;
 
@@ -43,9 +44,9 @@ class Login extends Component {
     };
     userOptionsChangeHandler = value => {
         this.setState({
-            role: value
+          userOptions: value
         });
-        this.role.value = {value};
+        this.userOptions.value = {value};
     };
 
     passwordChangeHandler = e => {
@@ -58,25 +59,30 @@ class Login extends Component {
         //prevent page from refresh
         e.preventDefault();
         const data = {
-            username: this.state.username,
+            email: this.state.email,
             password: this.state.password,
-            role: this.state.role
+          userOptions: this.state.userOptions
         };
+        console.log(data)
         axios.defaults.withCredentials = true;//very imp, sets credentials so that backend can load cookies
         // Customer = Mentor
         // Restaurant = Mentee
 
+      const cookies = new Cookies();
+      cookies.set('email', this.state.email, { path: '/' });
+      console.log(cookies.get('email'));
+
         axios.post(hostedAddress + ":3001/login", data)
             .then(response => {
                 console.log("Status Code : ", response);
-                if (response.status === 200 && response.data != "error") {
+                if (response.data == "Mentor") {
                     console.log("welcome mentor-");
                     console.log(cookie.load('cookie'));
                     localStorage.setItem('bearer-token', response.headers.authorization)
                     this.setState({
                         authFlag: true
                     });
-                } else if (response.status === 201 && response.data != "error") {
+                } else if (response.data == "Mentee") {
                     console.log("welcome mentee");
                     console.log(cookie.load('cookie'));
                     localStorage.setItem('bearer-token', response.headers.authorization)
@@ -124,10 +130,10 @@ class Login extends Component {
                                 </div>
                                 <div class="form-group">
                                     <input
-                                        onChange={this.usernameChangeHandler}
+                                        onChange={this.emailChangeHandler}
                                         type="email"
                                         class="form-control"
-                                        name="username"
+                                        name="email"
                                         placeholder="Email"
                                         required
                                     />
@@ -144,10 +150,10 @@ class Login extends Component {
                                 </div>
                                 <div class="form-group">
                                     <Dropdown
-                                        ref={ref => (this.role = ref)}
+                                        ref={ref => (this.userOptions = ref)}
                                         options={options}
                                         onChange={this.userOptionsChangeHandler}
-                                        value={this.state.role}
+                                        value={this.state.userOptions}
                                         placeholder="I'm a.."
                                         required
                                     />
