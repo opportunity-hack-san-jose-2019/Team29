@@ -5,9 +5,9 @@ const GlobalVar = require("../../GlobalVar");
 login=(req, res, conn, bcrypt)=> {
     let username = req.body.email;
     let password = req.body.password;
-    let role = req.body.userOptions;
-    // let role = roleObject.value;  
-    console.log("about to login", JSON.stringify(req.body));
+    let roleObject = req.body.userOptions;
+    let role = roleObject.value;  
+    // console.log("about to login", JSON.stringify(req.body));
     if (role == "Mentor") {
       Mentor.find({}, function(err, results) {
         if (err) throw err;
@@ -25,20 +25,14 @@ login=(req, res, conn, bcrypt)=> {
               mentor_id = element["mentor_email"];
             }
           });
-          console.log(password);
+        //   console.log(password);
           bcrypt.compare(password, passwordInDb, function(err, resp) {
             if (resp) {
               console.log("mentor logged in succesfully, now cookie time");
               res.cookie("cookie", "mentor", {
-                maxAge: 900000,
-                httpOnly: false,
                 path: "/"
               });
-              res.cookie("email", username, {
-                maxAge: 900000,
-                httpOnly: false,
-                path: "/"
-              });
+              res.cookie("email", username);
               res.cookie("name", nameInDb, {
                 maxAge: 900000,
                 httpOnly: false,
@@ -54,7 +48,7 @@ login=(req, res, conn, bcrypt)=> {
               console.log('token is----',token);
               res.setHeader("Access-Control-Expose-Headers", "Authorization");
               res.header({"Authorization": token})
-              res.end("Successful Login");
+              res.send("Mentor");
             } else {
               res.send("error");
             }
@@ -172,7 +166,7 @@ login=(req, res, conn, bcrypt)=> {
               console.log('token is----',token);
               res.setHeader("Access-Control-Expose-Headers", "Authorization");
               res.header({"Authorization": token})
-              res.end("Successful Login");
+              res.send("Mentee");
             } else {
               res.send("error");
             }

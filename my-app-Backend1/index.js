@@ -17,8 +17,19 @@ var JwtStrategy = passportJWT.Strategy;
 var Database=require('../my-app-Backend1/Database');
 var login=require('./src/api/login');
 var signup=require('./src/api/signup');
+var getProfileMentee=require('./src/api/getProfileMentee')
+var getProfileMentor=require('./src/api/getProfileMentor')
 var updateProfileMentee=require('./src/api/updateProfileMentee')
-var updateProfileMentor= require('./src/api/updateProfileMentor')
+var updateProfileMentor= require('./src/api/updateProfileMentor.js')
+var sendPref= require('./src/api/sendPref.js')
+var getMentors= require('./src/api/getMentors.js')
+var sendConnectRequest= require('./src/api/sendConnectRequest.js')
+var setConnectRequest= require('./src/api/setConnectRequest.js')
+var getConnectRequest= require('./src/api/getConnectRequest.js')
+var getMatchesMR= require('./src/api/getMatchesMR.js')
+var getMatchesME= require('./src/api/getMatchesME.js')
+var feedback= require('./src/api/feedback.js')
+
 
 //few constants declarations
 const GlobalVar = require("./GlobalVar");
@@ -90,22 +101,65 @@ passport.use('menteeAuth',menteeStrategy);
 
 //all the api calls
 app.post("/login", function(req, res) {
-  console.log("login req from frontend",req)
+  // console.log("login req from frontend",req)
   login.login(req,res,conn,bcrypt)
 });
 app.post("/signup", function(req, res) {
-  console.log("Signup req from frontend ",req)
+  // console.log("Signup req from frontend ",req)
   signup.signup(req,res,conn,bcrypt,saltRounds)
 });
 
-app.post("/updateProfileMentor", passport.authenticate('mentorAuth', { session: false }), function(req, res) {
+app.post("/getProfileMentee", function(req, res) {
+  getProfileMentee.getProfileMentee(req,res,conn)
+});
+
+app.post("/getProfileMentor", function(req, res) {
+  getProfileMentor.getProfileMentor(req,res,conn)
+});
+
+app.post("/updateProfileMentor", function(req, res) {
   updateProfileMentor.updateProfileMentor(req,res,conn)
 });
 
-app.post("/updateProfileMentee", passport.authenticate('menteeAuth', { session: false }), function(req, res) {
+app.post("/updateProfileMentee", function(req, res) {
   updateProfileMentee.updateProfileMentee(req,res,conn)
 });
 
+app.post("/sendPref", function(req, res) {
+  sendPref.sendPref(req,res,conn)
+});
+// passport.authenticate('menteeAuth', { session: false }), 
+app.post("/getMentors", function(req, res) {
+  getMentors.getMentors(req,res,conn)
+});
+
+app.post("/getConnectRequest",  function(req, res) {
+  getConnectRequest.getConnectRequest(req,res,conn)
+});
+
+app.post("/setConnectRequest", function(req, res) {
+  setConnectRequest.setConnectRequest(req,res,conn)
+});
+
+app.post("/sendConnectRequest",  function(req, res) {
+  sendConnectRequest.sendConnectRequest(req,res,conn)
+});
+
+app.post("/getMatchesMR",  function(req, res) {
+  getMatchesMR.getMatchesMR(req,res,conn)
+});
+
+app.post("/getMatchesME", function(req, res){
+  getMatchesME.getMatchesME(req,res,conn)
+})
+
+app.post("/feedback", function(req, res){
+  feedback.feedback(req,res,conn)
+})
+
+app.post("/getFeedback", function(req,res){
+  feedback.feedback(req,res,conn)
+})
 
 app.listen(3001);
 console.log("Server Listening on port 3001");

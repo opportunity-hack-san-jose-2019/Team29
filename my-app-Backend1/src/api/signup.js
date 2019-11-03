@@ -10,8 +10,8 @@ signup=(req, res, conn, bcrypt,saltRounds)=> {
   let lastName = req.body.lastName;
   let password = req.body.password;
   let username = req.body.email;
-  let role = req.body.userOptions;
-//   let role = roleObject.value;
+  let roleObject = req.body.userOptions;
+  let role = roleObject.value;
   if (role == "Mentor") {  
     //---------------w/ mongobd
     let mentor_id="";
