@@ -5,8 +5,8 @@ const GlobalVar = require("../../GlobalVar");
 login=(req, res, conn, bcrypt)=> {
     let username = req.body.email;
     let password = req.body.password;
-    let roleObject = req.body.userOptions;
-    let role = roleObject.value;  
+    let role = req.body.userOptions;
+    // let role = roleObject.value;  
     console.log("about to login", JSON.stringify(req.body));
     if (role == "Mentor") {
       Mentor.find({}, function(err, results) {
@@ -122,27 +122,27 @@ login=(req, res, conn, bcrypt)=> {
       //     });
       //   }
       // });
-    } else if (role == "Restaurant") {
-      Restaurant.find({}, function(err, results) {
+    } else if (role == "Mentee") {
+      Mentee.find({}, function(err, results) {
         if (err) throw err;
         else {
-          let rest_data = results;
+          let mentee_data = results;
           let flag = 0;
           let passwordInDb = "";
           let nameInDb = "";
-          let rest_id = "";
-          rest_data.forEach(element => {
-            if (username == element.rest_email) {
+          let mentee_id = "";
+          mentee_data.forEach(element => {
+            if (username == element.mentee_email) {
               flag == 1;
-              passwordInDb = element.rest_password;
-              nameInDb = element.rest_name;
-              rest_id = element["rest_id"];
+              passwordInDb = element.mentee_password;
+              nameInDb = element.mentee_name;
+              rest_id = element["mentee_email"];
             }
           });
           bcrypt.compare(password, passwordInDb, function(err, resp) {
-            console.log("rest logged in succesfully, now cookie time");
+            console.log("mentee logged in succesfully, now cookie time");
             if (resp) {
-              res.cookie("cookie", "restaurant", {
+              res.cookie("cookie", "mentee", {
                 maxAge: 900000,
                 httpOnly: false,
                 path: "/"

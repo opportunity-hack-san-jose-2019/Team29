@@ -17,6 +17,8 @@ var JwtStrategy = passportJWT.Strategy;
 var Database=require('../my-app-Backend1/Database');
 var login=require('./src/api/login');
 var signup=require('./src/api/signup');
+var updateProfileMentee=require('./src/api/updateProfileMentee')
+var updateProfileMentor= require('./src/api/updateProfileMentor')
 
 //few constants declarations
 const GlobalVar = require("./GlobalVar");
@@ -60,9 +62,9 @@ var conn = mysql.createPool({
 var jwtOptions = {}
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = GlobalVar['secret'];
-var custStrategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
+var mentorStrategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
   console.log('payload received', jwt_payload);
-  Customer.find({cust_email : jwt_payload.email}, 
+  Mentor.find({mentor_email : jwt_payload.email}, 
     function (res) {
       console.log('user authenticated', jwt_payload);
       next(null,jwt_payload);
@@ -71,9 +73,9 @@ var custStrategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
       next(null, false);
   });
 });
-var restStrategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
+var menteeStrategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
   console.log('payload received', jwt_payload);
-  Restaurant.find({rest_email : jwt_payload.email}, 
+  Mentee.find({mentee_email : jwt_payload.email}, 
     function (res) {
       console.log('user authenticated', jwt_payload);
       next(null,jwt_payload);
@@ -82,16 +84,26 @@ var restStrategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
       next(null, false);
   });
 });
-passport.use('custAuth',custStrategy);
-passport.use('restAuth',restStrategy);
+passport.use('mentorAuth',mentorStrategy);
+passport.use('menteeAuth',menteeStrategy);
 
 
 //all the api calls
 app.post("/login", function(req, res) {
-  Login.login(req,res,conn,bcrypt)
+  console.log("login req from frontend",req)
+  login.login(req,res,conn,bcrypt)
 });
 app.post("/signup", function(req, res) {
-  Signup.signup(req,res,conn,bcrypt,saltRounds)
+  console.log("Signup req from frontend ",req)
+  signup.signup(req,res,conn,bcrypt,saltRounds)
+});
+
+app.post("/updateProfileMentor", passport.authenticate('mentorAuth', { session: false }), function(req, res) {
+  updateProfileMentor.updateProfileMentor(req,res,conn)
+});
+
+app.post("/updateProfileMentee", passport.authenticate('menteeAuth', { session: false }), function(req, res) {
+  updateProfileMentee.updateProfileMentee(req,res,conn)
 });
 
 

@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 
 // create a schema
 var MenteeSchema = new Schema({
-  mentee_name: { type: String, required: true },
+  mentee_firstName: { type: String, required: true },
+  mentee_lastName: { type: String, required: true },
   mentee_email: { type: String, required: true},
   mentee_password: { type: String, required: true},
 },
